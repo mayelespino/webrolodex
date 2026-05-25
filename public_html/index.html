@@ -1,22 +1,213 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>Web Rolodex</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Rolodex</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Courier New', monospace;
+      background: #0d0f14;
+      color: #cdd6f4;
+      padding: 3rem 1.5rem 5rem;
+    }
+    a { text-decoration: none; }
+    code { font-family: inherit; }
+
+    .hero { text-align: center; margin-bottom: 2.5rem; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 22px; font-weight: 500; color: #cdd6f4; margin-bottom: 6px;
+    }
+    .logo i { font-size: 24px; color: #378add; }
+    .tagline { font-size: 12px; color: #555; letter-spacing: 0.08em; }
+
+    .form-card {
+      max-width: 560px; margin: 0 auto 3rem;
+      background: #141720; border: 1px solid #2a2d3a; border-radius: 12px; overflow: hidden;
+    }
+    .form-header {
+      background: #1a1d2b; border-bottom: 1px solid #2a2d3a;
+      padding: 0.75rem 1.25rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dots { display: flex; gap: 5px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .form-header-label { font-size: 11px; color: #555; letter-spacing: 0.08em; text-transform: uppercase; margin-left: 8px; }
+    .form-body { padding: 1.5rem 1.25rem; }
+    .prompt-row { display: flex; align-items: center; gap: 8px; }
+    .ps { font-size: 13px; color: #639922; font-weight: 500; white-space: nowrap; }
+    .text-input {
+      flex: 1; background: #1a1d2b; border: 1px solid #2a2d3a; border-radius: 8px;
+      color: #cdd6f4; font-family: inherit; font-size: 13px; padding: 7px 11px; outline: none;
+    }
+    .text-input:focus { border-color: #378add; }
+    .submit-btn {
+      background: #1a1d2b; border: 1px solid #2a2d3a; border-radius: 8px;
+      color: #cdd6f4; font-family: inherit; font-size: 12px; padding: 7px 14px;
+      cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap;
+    }
+    .submit-btn:hover { background: #21263a; }
+
+    .section { max-width: 680px; margin: 0 auto 2.5rem; }
+    .section-header {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #555;
+      margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 1px solid #1e2130;
+    }
+    .section-header i { font-size: 14px; color: #378add; }
+
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
+    .info-card {
+      background: #141720; border: 1px solid #2a2d3a; border-radius: 10px;
+      padding: 1rem; display: flex; flex-direction: column; gap: 6px;
+    }
+    .info-card i { font-size: 20px; color: #378add; }
+    .info-card-title { font-size: 13px; font-weight: 500; color: #cdd6f4; }
+    .info-card-desc { font-size: 12px; color: #666; line-height: 1.5; }
+
+    .note {
+      background: #1a1d2b; border: 1px solid #2a2d3a; border-left: 2px solid #ef9f27;
+      border-radius: 8px; border-top-left-radius: 0; border-bottom-left-radius: 0;
+      padding: 10px 14px; font-size: 12px; color: #a0a8c0; line-height: 1.6;
+      margin-bottom: 1.25rem; display: flex; gap: 8px; align-items: flex-start;
+    }
+    .note i { font-size: 14px; color: #ef9f27; flex-shrink: 0; margin-top: 2px; }
+
+    .steps { display: flex; flex-direction: column; }
+    .step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid #1a1d2b; }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+      background: #1e2a3a; border: 1px solid #2a4060;
+      color: #378add; font-size: 11px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    }
+    .step-text { font-size: 13px; color: #a0a8c0; line-height: 1.6; }
+    .key-priv {
+      display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 5px;
+      font-weight: 500; background: #2a1e30; color: #cba6f7; border: 1px solid #4a2a60;
+      margin: 0 2px; vertical-align: middle;
+    }
+    .key-pub {
+      display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 5px;
+      font-weight: 500; background: #1e2a3a; color: #89b4fa; border: 1px solid #2a4060;
+      margin: 0 2px; vertical-align: middle;
+    }
+
+    .alt-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1rem; }
+    .alt-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1a1d2b; border: 1px solid #2a2d3a; border-radius: 8px;
+      color: #89b4fa; font-family: inherit; font-size: 12px; padding: 7px 14px;
+    }
+    .alt-btn:hover { border-color: #378add; }
+
+    .link-list { display: flex; flex-direction: column; gap: 8px; }
+    .link-row {
+      display: flex; align-items: center; gap: 10px;
+      background: #141720; border: 1px solid #2a2d3a; border-radius: 8px;
+      padding: 10px 14px; color: #cdd6f4; transition: border-color 0.15s;
+    }
+    .link-row:hover { border-color: #378add; }
+    .link-row > i:first-child { font-size: 16px; color: #378add; flex-shrink: 0; }
+    .link-label { font-size: 13px; color: #cdd6f4; }
+    .link-sub { font-size: 11px; color: #555; margin-top: 1px; }
+    .link-ext { margin-left: auto; font-size: 13px; color: #555; }
+  </style>
 </head>
-<style>
-	h2 {
-		color: green;
-	}
-</style>
 <body>
-	<h1>Web Rolodex</h1>
-	<h2>V2</h2> 
 
-	<form action="form.php" method="post">
-		<input type="text" name="username" > 
+  <div class="hero">
+    <div class="logo"><i class="ti ti-address-book"></i> web rolodex</div>
+    <div class="tagline">ssh public key directory</div>
+  </div>
 
-		<input type="submit" name="Submit"> 
-	</form>
+  <div class="form-card">
+    <div class="form-header">
+      <div class="dots">
+        <div class="dot" style="background:#e24b4a"></div>
+        <div class="dot" style="background:#ef9f27"></div>
+        <div class="dot" style="background:#639922"></div>
+      </div>
+      <span class="form-header-label">key lookup</span>
+    </div>
+    <div class="form-body">
+      <form action="form.php" method="post">
+        <div class="prompt-row">
+          <span class="ps">~/rolodex $</span>
+          <input class="text-input" type="text" name="username" placeholder="enter username..." autocomplete="off" />
+          <button class="submit-btn" type="submit"><i class="ti ti-search"></i> lookup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-help-circle"></i> how to use</div>
+    <div class="info-grid">
+      <div class="info-card">
+        <i class="ti ti-lock"></i>
+        <div class="info-card-title">double encryption</div>
+        <div class="info-card-desc">Messages are encrypted twice — once with your private key, once with the recipient's public key.</div>
+      </div>
+      <div class="info-card">
+        <i class="ti ti-fingerprint"></i>
+        <div class="info-card-title">authenticity</div>
+        <div class="info-card-desc">Recipients verify your identity by decrypting with your public key.</div>
+      </div>
+      <div class="info-card">
+        <i class="ti ti-shield-lock"></i>
+        <div class="info-card-title">confidentiality</div>
+        <div class="info-card-desc">Only the intended recipient can read the message using their own private key.</div>
+      </div>
+    </div>
+    <div class="note">
+      <i class="ti ti-alert-triangle"></i>
+      <span>Key files must have a <code style="color:#ef9f27">.pub</code> extension, a unique filename matching the username, and contain only the public key — no extra spaces or characters.</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-list-numbers"></i> encryption steps</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text">Look up the recipient's public key using the form above.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text">Encrypt the message with your <span class="key-priv">private key</span>.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text">Encrypt again with the recipient's <span class="key-pub">public key</span>.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-text">Base64-encode the result and send it to the recipient.</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-text">Recipient base64-decodes the message.</div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-text">Recipient decrypts with their <span class="key-priv">private key</span>.</div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-text">Recipient decrypts again with your <span class="key-pub">public key</span> to verify your identity.</div></div>
+    </div>
+    <div class="alt-row">
+      <a class="alt-btn" href="https://github.com/mayelespino/webrolodex/tree/main/encrypt_file" target="_blank"><i class="ti ti-lock"></i> encrypt tool</a>
+      <a class="alt-btn" href="encrypt.py"><i class="ti ti-brand-python"></i> python example</a>
+      <a class="alt-btn" href="https://github.com/mayelespino/webrolodex/blob/main/README.md" target="_blank"><i class="ti ti-file-text"></i> readme.md</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-book"></i> learn rsa encryption</div>
+    <div class="link-list">
+      <a class="link-row" href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)" target="_blank">
+        <i class="ti ti-world"></i>
+        <div><div class="link-label">RSA cryptosystem</div><div class="link-sub">en.wikipedia.org</div></div>
+        <i class="ti ti-external-link link-ext"></i>
+      </a>
+      <a class="link-row" href="https://youtu.be/j2NBya6ADSY?si=lmPmnKxLAE5zYHSD" target="_blank">
+        <i class="ti ti-player-play"></i>
+        <div><div class="link-label">RSA algorithm — step by step example</div><div class="link-sub">youtube.com</div></div>
+        <i class="ti ti-external-link link-ext"></i>
+      </a>
+      <a class="link-row" href="https://youtu.be/Ea-uH4wkCik?si=DEln7uRP0UuZD3ja" target="_blank">
+        <i class="ti ti-player-play"></i>
+        <div><div class="link-label">How to encrypt plain text with RSA keys</div><div class="link-sub">youtube.com</div></div>
+        <i class="ti ti-external-link link-ext"></i>
+      </a>
+    </div>
+  </div>
 
 </body>
-
 </html>
